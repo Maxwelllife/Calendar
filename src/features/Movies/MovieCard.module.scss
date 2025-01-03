@@ -1,0 +1,34 @@
+@use "../../styles/shared";
+.card {
+  display: flex;
+  flex: 0 1 0;
+  flex-direction: column;
+  margin: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  @media (max-width: shared.$max-mobile-width) {
+    margin: 0.5rem;
+  }
+  a {
+    color: shared.$primary-color;
+  }
+}
+.thumbnail {
+  max-height: 200px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.content {
+  padding: 1rem;
+  @media (max-width: shared.$max-mobile-width) {
+    padding: 0.5rem;
+  }
+  .overview {
+    font-size: small;
+    color: shared.$dimmed-color;
+  }
+  .popularity {
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+}
