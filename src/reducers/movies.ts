@@ -1,4 +1,4 @@
-import { Action, Reducer } from "redux";
+import {ActionWithPayload, createReducer} from "../redux/utils";
 
 export interface Movie {
     id: number;
@@ -8,23 +8,62 @@ export interface Movie {
     image?: string;
 }
 interface MovieState {
-    top: Movie[]
+    top: Movie[];
+    // 4. тут оголошуємо властивість loading
+    loading: boolean;
 }
 
 
 const inintialState:MovieState = {
-    top: [
-        { id: 1, title: "The Shawshank Redemption", popularity: 98, overview: "Redemption..." },
-        { id: 2, title: "The Godfather", popularity: 97, overview: "Godfather..." },
-        { id: 3, title: "The Dark Knight", popularity: 96.5, overview: "Batman..." },
-        { id: 4, title: "The Godfather Part II", popularity: 96, overview: "Part II..." },
-        { id: 5, title: "Angry Men", popularity: 94, overview: "Men..." }
-    ]
+    top: [],
+    // 5. додаємо нову змінну loading (тобто ми не завантажуємо дані початково)
+    loading: false,
 }
 
+export const moviesLoaded = (movies: Movie[]) => ({
+        type:"movies/loaded",
+        payload:movies
+    }
+)
 
-const moviesReducer: Reducer<MovieState, Action> = (state, action) => {
-    return inintialState;
-}
+// 2. створимо акшн крієйтор
+export const moviesLoading = () => ({
+    type: "movies/loading",
+})
+
+const moviesReducer = createReducer<MovieState>(
+    inintialState,
+    {
+        "movies/loaded": (state, action: ActionWithPayload<Movie[]>) => {
+            return {
+                ...state,
+                top: action.payload,
+                // 6. коли дані завантажились то треба ресетнути у false наш індикатор
+                loading: false,
+            }
+        },
+        //    3. додаємо new хендлер на цей екшн
+        "movies/loading": (state, action) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        }
+    }
+)
+
+// const moviesReducer: Reducer<MovieState, ActionWithPayload<Movie[]>> = (state, action) => {
+//     const currentState = state ?? inintialState
+//
+//     switch (action.type) {
+//         case "movies/Loaded":
+//             return {
+//                 ...currentState,
+//                 top: action.payload
+//             }
+//             default:
+//                 return currentState;
+//     }
+// }
 
 export default moviesReducer;
