@@ -1,13 +1,16 @@
 import styled from 'styled-components';
-import { media, theme } from '../../app/styles/theme';
+import { media, theme } from '../../../app/styles/theme';
 
-const DayContainer = styled.div`
+const DayContainer = styled.div<{ $isCurrentMonth: boolean }>`
     border-radius: 5px;
-    padding: ${theme.spacing.xs};
-    background-color: #e3e5e6;
+    padding: 5px;
+    background-color: ${(props) =>
+            props.$isCurrentMonth ? '#e3e5e6' : '#ebebeb'};
+    color: ${(props) => (props.$isCurrentMonth ? '#4c4e50' : '#969a9b')};
     display: flex;
     height: 150px;
     flex-direction: column;
+    //align-items: center;
 
     .day_number {
         font-size: ${theme.fontSizes.xs};

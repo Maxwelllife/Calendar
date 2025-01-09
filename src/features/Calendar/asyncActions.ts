@@ -3,9 +3,5 @@ import { fetchHolidays } from '../../shared/api/holidaysAPI';
 
 export const fetchHolidaysAsync = createAsyncThunk(
     'calendar/fetchHolidays',
-    async (year: number) => {
-        const response = await fetchHolidays(year.toString());
-        console.log('response', response);
-        return response;
-    }
+    async (year: number) => await fetchHolidays(year.toString())
 );
