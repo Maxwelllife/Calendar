@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
 
-interface Task {
+export interface Task {
     id: string;
     text: string;
-    day: string; // День, до якого прив'язана задача
+    day: string; // День, до якого прив'язана таска
     order: number; // Для сортування задач всередині дня
+    // priority: "high" | "medium" | "low";
 }
 
 interface TaskState {
@@ -22,15 +22,11 @@ const taskSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        addTask: (state, action: PayloadAction<{ day: string; text: string }>) => {
-            const newTask: Task = {
-                id: uuidv4(),
-                day: action.payload.day,
-                text: action.payload.text,
-                order: state.tasks.filter(task => task.day === action.payload.day).length + 1, // Додаємо в кінець
-            };
+        addTask: (state, action: PayloadAction<Task>) => {
+            const newTask = action.payload;
             state.tasks.push(newTask);
         },
+
         editTask: (state, action: PayloadAction<{ id: string; text: string }>) => {
 
             const task = state.tasks.find((task) => {

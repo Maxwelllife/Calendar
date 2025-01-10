@@ -3,7 +3,7 @@ export const theme = {
         border: '#ddd',
         background: '#f9f9f9',
         taskBackground: '#fff',
-        holidayText: '#007bff',
+        holidayText: '#d18800',
     },
     spacing: {
         xs: '10px',

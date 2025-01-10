@@ -1,5 +1,5 @@
 import React from 'react';
-import Day from './Day';
+import Day from './Day/Day';
 import { generateCalendarDays } from './utils';
 import GridContainer from "./styles/GridContainer.styles";
 
