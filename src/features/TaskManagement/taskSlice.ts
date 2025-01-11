@@ -59,7 +59,7 @@ const taskSlice = createSlice({
             }
         },
         filterTasks: (state, action: PayloadAction<string>) => {
-            state.filter = action.payload; // Оновлюємо текстовий фільтр
+            state.filter = action.payload; // Оновлюємо текстовий фільтр (зберігаємо текст у Redux)
         },
     },
 });

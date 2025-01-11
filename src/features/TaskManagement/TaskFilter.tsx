@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useAppDispatch } from '../../shared/hooks/reduxHooks';
+import {useAppDispatch, useAppSelector} from '../../shared/hooks/reduxHooks';
 import { filterTasks } from './taskSlice';
 
 const FilterContainer = styled.div`
@@ -16,17 +16,18 @@ const FilterInput = styled.input`
 
 const TaskFilter: React.FC = () => {
     const dispatch = useAppDispatch();
-
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(filterTasks(event.target.value));
+    const filter = useAppSelector((state) => state.tasks.filter);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(filterTasks(event.target.value)); // Оновлюємо текст фільтра
     };
 
     return (
         <FilterContainer>
             <FilterInput
                 type="text"
+                value={filter}
                 placeholder="Search tasks..."
-                onChange={handleFilterChange}
+                onChange={handleChange}
             />
         </FilterContainer>
     );

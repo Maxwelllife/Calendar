@@ -11,3 +11,11 @@ export const makeSelectTasksByDate = () => {
             (tasks, date) => tasks.filter((task) => task.day === date)
         );
 };
+
+// Селектор для отримання тексту фільтра
+const selectFilter = (state: RootState) => state.tasks.filter;
+// Селектор для отримання фільтрованих задач
+export const selectFilteredTasks = createSelector(
+    [selectTasks, selectFilter],
+    (tasks, filter) => tasks.filter((task) => task.text.toLowerCase().includes(filter.toLowerCase()))
+);
