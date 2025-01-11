@@ -23,7 +23,7 @@ interface DayContentProps {
     activeTask: Task | undefined;
     setActiveTask: (id: string) => void;
     deleteTaskById: (id: string) => void;
-    editTaskById: (id: string, text: string) => void;
+    editTaskById: (id: string, text?: string, priority?:"high" | "medium" | "low" ) => void;
 }
 
 const DayContent: React.FC<DayContentProps> = ({
@@ -39,6 +39,7 @@ const DayContent: React.FC<DayContentProps> = ({
                 <TaskStripe
                     key={task.id}
                     isActive={task.id === activeTask?.id}
+                    priority={task.priority}
                     onClick={() => setActiveTask(task.id)}
                 />
             ))}

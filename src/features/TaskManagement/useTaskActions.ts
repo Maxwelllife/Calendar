@@ -26,8 +26,8 @@ export const useTaskActions = (tasks: Task[], setActiveTaskId: (id: string | nul
         }
     };
 
-    const editTaskById = (id: string, text: string) => {
-        dispatch(editTask({id, text}));
+    const editTaskById = (id: string, text?: string, priority?: "high" | "medium" | "low") => {
+        dispatch(editTask({id, text, priority}));
     };
 
     return {addNewTask, deleteTaskById, editTaskById};
