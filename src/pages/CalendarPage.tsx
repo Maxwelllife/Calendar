@@ -1,21 +1,11 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import { useAppDispatch } from '../shared/hooks/reduxHooks';
 import { fetchHolidaysAsync } from '../features/Calendar/asyncActions';
 import TaskFilter from '../features/TaskManagement/TaskFilter';
 import Calendar from "../features/Calendar/Calendar";
+import {PageContainer} from "./styles/CalendarPage.styles";
 
 
-const PageContainer = styled.div`
-    padding: 20px;
-    background-color: #f5f5f5;
-    min-height: 100vh;
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-`;
 
 const CalendarPage: React.FC = () => {
     const dispatch = useAppDispatch();

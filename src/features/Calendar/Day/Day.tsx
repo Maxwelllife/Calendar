@@ -2,7 +2,7 @@ import {DayContainer, AddTaskButton, ButtonContainer} from "./styles/Day.styles"
 import React, {useEffect, useState} from "react";
 import {makeSelectHolidaysByDate} from "../calendarSelectors";
 import {useAppDispatch, useAppSelector} from "../../../shared/hooks/reduxHooks";
-import {addTask} from "../../TaskManagement/taskSlice";
+import {addTask, editTask} from "../../TaskManagement/taskSlice";
 import {FaPlus} from "react-icons/fa";
 import {selectFilteredTasks} from "../../TaskManagement/taskSelectors";
 import DayHeader from "./components/DayHeader";
@@ -43,6 +43,11 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
         }
     }, [tasks, activeTaskId]);
 
+    const handleSetActiveTaskId = React.useCallback((id: string) => {
+        console.log("setActiveTaskId called with ID:", id);
+        setActiveTaskId(id);
+    }, []);
+
     const { deleteTaskById, editTaskById } = useTaskActions(tasks, setActiveTaskId);
 
     const activeTask = tasks.find((task) => task.id === activeTaskId);
@@ -51,7 +56,7 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
         const newTask = {
             id: uuidv4(),
             day: formattedDate,
-            text: "New Task",
+            text: "Click to edit",
             order: tasks.length + 1,
         };
         dispatch(addTask(newTask));
@@ -70,9 +75,10 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
                 <DayContent
                     tasks={tasks}
                     activeTask={activeTask}
-                    setActiveTask={setActiveTaskId}
+                    setActiveTask={handleSetActiveTaskId}
                     deleteTaskById={deleteTaskById}
                     editTaskById={editTaskById}
+                    date={date}
                 />
             )}
             <ButtonContainer>

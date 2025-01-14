@@ -17,5 +17,5 @@ const selectFilter = (state: RootState) => state.tasks.filter;
 // Селектор для отримання фільтрованих задач
 export const selectFilteredTasks = createSelector(
     [selectTasks, selectFilter],
-    (tasks, filter) => tasks.filter((task) => task.text.toLowerCase().includes(filter.toLowerCase()))
+    (tasks, filter) => tasks.filter((task) => task.text?.toLowerCase().includes(filter.toLowerCase()))
 );

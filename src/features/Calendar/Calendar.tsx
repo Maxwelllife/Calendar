@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import CalendarGrid from './CalendarGrid';
 import Header from "./styles/Header.styles";
 import WeekDays from "./styles/WeekDays.styles";
+import {DndContext, closestCenter} from "@dnd-kit/core";
+import {arrayMove} from "@dnd-kit/sortable";
+import {useAppDispatch, useAppSelector} from "../../shared/hooks/reduxHooks";
+import {editTask, reorderTask} from "../TaskManagement/taskSlice";
 
 const Calendar: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const dispatch = useAppDispatch();
+    const allTasks = useAppSelector((state) => state.tasks.tasks); // Отримуємо всі задачі з Redux
+
 
     // Отримуємо назву місяця і року
-    const currentMonthName = currentDate.toLocaleString('en-US', { month: 'long' });
+    const currentMonthName = currentDate.toLocaleString('en-US', {month: 'long'});
     const currentYear = currentDate.getFullYear();
 
     // Перемикання місяців
@@ -18,9 +25,49 @@ const Calendar: React.FC = () => {
     const handleNextMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
     };
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+
+        if (!over) return; // Якщо елемент не скинуто в жодну область
+
+        const activeTaskId = active.data.current?.taskId; // Отримуємо ID завдання
+        const activeTaskDay = active.data.current?.day;   // Отримуємо день завдання
+
+        const overDay = over.data.current?.date; // Отримуємо день, куди скидаємо
+        const overTaskId = over.data.current?.taskId; // Отримуємо ID завдання, над яким скидаємо
+
+        if (!activeTaskId || !activeTaskDay || !overDay) return;
+
+        if (activeTaskDay === overDay) {
+            // Перетягування в межах одного дня
+            const tasksForDay = allTasks.filter((task) => task.day === activeTaskDay);
+
+            const oldIndex = tasksForDay.findIndex((task) => task.id === activeTaskId);
+
+            // Якщо overTaskId є null, це означає, що завдання перетягнули в кінець
+            const newIndex = overTaskId
+                ? tasksForDay.findIndex((task) => task.id === overTaskId)
+                : tasksForDay.length;
+
+            if (oldIndex !== newIndex && newIndex !== -1) {
+                const reorderedTasks = arrayMove(tasksForDay, oldIndex, newIndex);
+
+                reorderedTasks.forEach((task, index) => {
+                    dispatch(reorderTask({ id: task.id, order: index + 1 }));
+                });
+            }
+        } else {
+            // Перетягування між різними днями
+            dispatch(editTask({ id: activeTaskId, day: overDay }));
+        }
+    };
+
+
+
+
 
     return (
-        <>
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <Header>
                 <button onClick={handlePreviousMonth}>&lt;</button>
                 <span className="month-name">{`${currentMonthName} ${currentYear}`}</span>
@@ -31,8 +78,8 @@ const Calendar: React.FC = () => {
                     <span key={day}>{day}</span>
                 ))}
             </WeekDays>
-            <CalendarGrid currentDate={currentDate} />
-        </>
+            <CalendarGrid currentDate={currentDate} allTasks={allTasks}/>
+        </DndContext>
     );
 };
 

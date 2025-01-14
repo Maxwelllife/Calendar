@@ -1,38 +1,18 @@
-import styled from 'styled-components';
 import React from "react";
-
-const Stripe = styled.div<{ isActive: boolean, priority?: "high" | "medium" | "low" }>`
-    height: 8px;
-    width: ${({ isActive }) => (isActive ? '58px' : '45px')};
-    margin: 4px 0;
-    border-radius: 4px;
-    background-color: ${({ priority }) => {
-        if (priority === "high") return "#b60101";
-        if (priority === "medium") return "#f3e704";
-        if (priority === "low") return "#84bc25";
-        return "#ccc";
-    }};
-    cursor: pointer;
-    border: ${({ isActive }) => (isActive ? '1px solid #ddd' : '1px solid transparent')} ;
-    opacity: ${({ isActive }) => (isActive ? '1' : '0.6')};
-    transition: transform 0.2s, opacity 0.2s;
-    
-    &:hover {
-        opacity: 1;
-        border: 1px solid #ddd;
-    }
-`;
+import {Stripe} from "./styles/TaskStripe.styles";
 
 interface TaskStripeProps {
     isActive: boolean;
     priority?: "high" | "medium" | "low";
-    onClick: () => void;
+    onPointerUp: () => void;
 }
 
-const TaskStripe: React.FC<TaskStripeProps> = ({ isActive, priority, onClick }) => {
-    console.log("TaskStripe priority:", priority);
+const TaskStripe: React.FC<TaskStripeProps> = ({ isActive, priority, onPointerUp }) => {
     return(
-        <Stripe isActive={isActive} priority={priority} onClick={onClick}/>
+        <Stripe $isActive={isActive} $priority={priority}  onPointerUp={() => {
+            console.log('Stripe clicked'); // Додайте цей лог
+            onPointerUp();
+        }}/>
     );
 }
 

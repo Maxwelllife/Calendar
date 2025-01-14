@@ -1,14 +1,15 @@
 import {useAppDispatch} from "../../shared/hooks/reduxHooks";
 import {addTask, deleteTask, editTask, Task} from "./taskSlice";
+import {v4 as uuidv4} from 'uuid';
 
 export const useTaskActions = (tasks: Task[], setActiveTaskId: (id: string | null) => void) => {
     const dispatch = useAppDispatch();
 
     const addNewTask = (day: string) => {
         const newTask = {
-            id: Date.now().toString(),
+            id: uuidv4(),
             day,
-            text: "New Task",
+            text: "Click to edit",
             order: tasks.length + 1,
         };
 

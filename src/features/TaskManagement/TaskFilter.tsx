@@ -1,18 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '../../shared/hooks/reduxHooks';
 import { filterTasks } from './taskSlice';
-
-const FilterContainer = styled.div`
-    margin-bottom: 20px;
-`;
-
-const FilterInput = styled.input`
-    //width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-`;
+import {FilterContainer, FilterInput} from "./styles/TaskFilter.styles";
 
 const TaskFilter: React.FC = () => {
     const dispatch = useAppDispatch();
