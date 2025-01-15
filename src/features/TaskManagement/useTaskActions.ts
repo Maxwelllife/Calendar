@@ -1,23 +1,20 @@
-import {useAppDispatch} from "../../shared/hooks/reduxHooks";
-import {addTask, deleteTask, editTask, Task} from "./taskSlice";
-import {v4 as uuidv4} from 'uuid';
+import {useAppDispatch, useAppSelector} from "../../shared/hooks/reduxHooks";
+import {addTask, deleteTask, editTask, filterTasks, Task} from "./taskSlice";
+import { toast } from 'react-toastify';
 
-export const useTaskActions = (tasks: Task[], setActiveTaskId: (id: string | null) => void) => {
+export const useTaskActions = ( currentDayTasks?: Task[], setActiveTaskId?: (id: string | null) => void) => {
     const dispatch = useAppDispatch();
-
-
+    const tasks = useAppSelector((state) => state.tasks.tasks);
     const addNewTask = (newTask: Task) => {
         dispatch(addTask(newTask));
-        setActiveTaskId(newTask.id); // Робимо нову таску активною
+        if (setActiveTaskId) setActiveTaskId(newTask.id); // Робимо нову таску активною
     };
 
     const deleteTaskById = (taskId: string) => {
         dispatch(deleteTask(taskId));
-        const remainingTasks = tasks.filter((task) => task.id !== taskId);
-        if (remainingTasks.length > 0) {
-            setActiveTaskId(remainingTasks[0].id); // Встановлюємо наступну таску активною
-        } else {
-            setActiveTaskId(null); // Якщо завдань більше немає
+        if (setActiveTaskId && currentDayTasks) {
+            const remainingTasks = currentDayTasks.filter((task) => task.id !== taskId);
+            setActiveTaskId(remainingTasks.length > 0 ? remainingTasks[0].id : null);
         }
     };
 
@@ -25,5 +22,17 @@ export const useTaskActions = (tasks: Task[], setActiveTaskId: (id: string | nul
         dispatch(editTask({id, text, priority}));
     };
 
-    return {addNewTask, deleteTaskById, editTaskById};
+    const applyFilter = (searchValue: string) => {
+        dispatch(filterTasks(searchValue)); // Оновлюємо фільтр у Redux
+
+        const hasTasks = tasks.some((task) =>
+            task.text?.toLowerCase().includes(searchValue.toLowerCase())
+        );
+
+        if (searchValue && !hasTasks) {
+            toast.info("Задачі не знайдені за цим запитом.");
+        }
+    };
+
+    return {addNewTask, deleteTaskById, editTaskById, applyFilter};
 };

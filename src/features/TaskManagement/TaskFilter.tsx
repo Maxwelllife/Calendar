@@ -1,13 +1,14 @@
 import React from 'react';
-import {useAppDispatch, useAppSelector} from '../../shared/hooks/reduxHooks';
-import { filterTasks } from './taskSlice';
+import { useAppSelector} from '../../shared/hooks/reduxHooks';
 import {FilterContainer, FilterInput} from "./styles/TaskFilter.styles";
+import {useTaskActions} from "./useTaskActions";
 
 const TaskFilter: React.FC = () => {
-    const dispatch = useAppDispatch();
+
     const filter = useAppSelector((state) => state.tasks.filter);
+    const { applyFilter } = useTaskActions();
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(filterTasks(event.target.value)); // Оновлюємо текст фільтра
+        applyFilter(event.target.value); // Оновлюємо текст фільтра
     };
 
     return (

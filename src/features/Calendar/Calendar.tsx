@@ -6,6 +6,7 @@ import {DndContext, closestCenter} from "@dnd-kit/core";
 import {arrayMove} from "@dnd-kit/sortable";
 import {useAppDispatch, useAppSelector} from "../../shared/hooks/reduxHooks";
 import {editTask, reorderTask} from "../TaskManagement/taskSlice";
+import { toast } from "react-toastify";
 
 const Calendar: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -43,7 +44,7 @@ const Calendar: React.FC = () => {
         // console.log('activeTaskDay', activeTaskDay)
 
         if (new Date(overDay) < today) {
-            alert("Перетягування на минулі дні заборонено.");
+            toast.error("Перетягування на минулі дні заборонено.");
             return;
         }
 

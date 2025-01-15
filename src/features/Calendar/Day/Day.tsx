@@ -1,8 +1,7 @@
 import {DayContainer, AddTaskButton, ButtonContainer} from "./styles/Day.styles";
 import React, {useEffect, useState} from "react";
 import {makeSelectHolidaysByDate} from "../calendarSelectors";
-import {useAppDispatch, useAppSelector} from "../../../shared/hooks/reduxHooks";
-import {addTask, editTask} from "../../TaskManagement/taskSlice";
+import {useAppSelector} from "../../../shared/hooks/reduxHooks";
 import {FaPlus} from "react-icons/fa";
 import {selectFilteredTasks} from "../../TaskManagement/taskSelectors";
 import DayHeader from "./components/DayHeader";
@@ -23,16 +22,15 @@ interface DayProps {
 
 
 const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, today}) => {
-    const dispatch = useAppDispatch();
     const formattedDate = new Date(date).toISOString().split("T")[0];
 
-    // const selectTasksByDate = React.useMemo(() => makeSelectTasksByDate(), []);
     const selectHolidaysByDate = React.useMemo(makeSelectHolidaysByDate, []);
     const holidays = useAppSelector((state) => selectHolidaysByDate(state, formattedDate));
 
     const allFilteredTasks = useAppSelector(selectFilteredTasks); // Отримуємо фільтровані по пошуку таски
     // Фільтруємо таски для конкретного дня
     const tasks = allFilteredTasks.filter((task) => task.day === date);
+
     const [activeTaskId, setActiveTaskId] = useState<string | null>(
         tasks.length > 0 ? tasks[0].id : null
     );
@@ -47,7 +45,7 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
         setActiveTaskId(id);
     }, []);
 
-    const { addNewTask, editTaskById, deleteTaskById } = useTaskActions(tasks, setActiveTaskId);
+    const {addNewTask, editTaskById, deleteTaskById} = useTaskActions(tasks, setActiveTaskId);
 
     const activeTask = tasks.find((task) => task.id === activeTaskId);
 
@@ -60,7 +58,6 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
             priority: undefined, // Якщо не обов'язково, можна пропустити
         };
         addNewTask(newTask);
-        // setActiveTaskId(newTask.id);
     };
     today.setHours(0, 0, 0, 0);
     const isPast = new Date(date) < today; // Дні в минулому
@@ -74,17 +71,16 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
                     {holiday.name}
                 </div>
             ))}
-            {/*{ tasks.length >= 0 && !isPast  && (*/}
-                <DayContent
-                    tasks={tasks}
-                    activeTask={activeTask}
-                    setActiveTask={handleSetActiveTaskId}
-                    deleteTaskById={deleteTaskById}
-                    editTaskById={editTaskById}
-                    date={date}
-                    isPast={isPast}
-                />
-            {/*)}*/}
+            <DayContent
+                tasks={tasks}
+                activeTask={activeTask}
+                setActiveTask={handleSetActiveTaskId}
+                deleteTaskById={deleteTaskById}
+                editTaskById={editTaskById}
+                date={date}
+                isPast={isPast}
+            />
+
             <ButtonContainer>
                 {!isPast && (
                     <AddTaskButton onClick={handleCreateTask}>

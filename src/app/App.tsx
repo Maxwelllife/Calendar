@@ -5,6 +5,8 @@ import CalendarPage from '../pages/CalendarPage';
 import { GlobalStyles } from './styles/globalStyles';
 import { ThemeProvider } from 'styled-components';
 import {theme} from "./styles/theme";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     return (
@@ -13,6 +15,7 @@ function App() {
             <GlobalStyles />
             <CalendarPage />
             </ThemeProvider>
+            <ToastContainer position="top-right" autoClose={3000} />
         </Provider>
     );
 }

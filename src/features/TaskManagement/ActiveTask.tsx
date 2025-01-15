@@ -3,6 +3,7 @@ import {Task} from "./taskSlice";
 import {FaTrashAlt} from "react-icons/fa";
 import PrioritySelector from "./PrioritySelector";
 import {ActiveTaskContainer} from "./styles/ActiveTask.styles";
+import {toast} from "react-toastify";
 
 
 interface ActiveTaskProps {
@@ -13,16 +14,20 @@ interface ActiveTaskProps {
 
 const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask}) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedText, setEditedText] = useState(task.text);
+    const [editedText, setEditedText] = useState<string>(task.text || "");
     const [isPrioritySelectorActive, setPrioritySelectorActive] = useState(false); // Флаг для визначення активності вибору пріоритету
 
     // Оновлюємо текст, коли змінюється активна таска
     useEffect(() => {
-        setEditedText(task.text);
+        setEditedText(task.text || "");
     }, [task]);
     const handleSaveEdit = () => {
+        if (!editedText.trim()) {
+            toast.error("Текст завдання не може бути порожнім.");
+            return;
+        }
         if (editedText !== task.text) {
-            onEditTask(task.id, editedText); // Зберігаємо текст
+            onEditTask(task.id, editedText.trim()); // Зберігаємо текст
         }
         setIsEditing(false); // Закриваємо редагування
     };
@@ -58,7 +63,7 @@ const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask})
 
             ) : (
                 <div className="task-text" onClick={() => setIsEditing(true)}>
-                    {task.text}
+                    {task.text || "Click to edit"}
                 </div>
             )}
 
