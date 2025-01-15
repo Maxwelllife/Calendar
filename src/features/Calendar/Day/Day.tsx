@@ -21,17 +21,16 @@ interface DayProps {
 }
 
 
-const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName }) => {
+const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName}) => {
     const dispatch = useAppDispatch();
     const formattedDate = new Date(date).toISOString().split("T")[0];
 
     // const selectTasksByDate = React.useMemo(() => makeSelectTasksByDate(), []);
     const selectHolidaysByDate = React.useMemo(makeSelectHolidaysByDate, []);
-
-    // const tasks = useAppSelector((state) => selectTasksByDate(state, date));
-    const allFilteredTasks = useAppSelector(selectFilteredTasks); // Отримуємо фільтровані задачі
     const holidays = useAppSelector((state) => selectHolidaysByDate(state, formattedDate));
-    // Фільтруємо завдання для конкретного дня
+
+    const allFilteredTasks = useAppSelector(selectFilteredTasks); // Отримуємо фільтровані задачі
+    // Фільтруємо таски для конкретного дня
     const tasks = allFilteredTasks.filter((task) => task.day === date);
     const [activeTaskId, setActiveTaskId] = useState<string | null>(
         tasks.length > 0 ? tasks[0].id : null
@@ -39,16 +38,15 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
 
     useEffect(() => {
         if (!tasks.some((task) => task.id === activeTaskId)) {
-            setActiveTaskId(tasks.length > 0 ? tasks[0].id : null); // Встановлюємо першу задачу активною
+            setActiveTaskId(tasks.length > 0 ? tasks[0].id : null); // Першу задачу активною
         }
     }, [tasks, activeTaskId]);
 
     const handleSetActiveTaskId = React.useCallback((id: string) => {
-        console.log("setActiveTaskId called with ID:", id);
         setActiveTaskId(id);
     }, []);
 
-    const { deleteTaskById, editTaskById } = useTaskActions(tasks, setActiveTaskId);
+    const {deleteTaskById, editTaskById} = useTaskActions(tasks, setActiveTaskId);
 
     const activeTask = tasks.find((task) => task.id === activeTaskId);
 
@@ -62,10 +60,15 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
         dispatch(addTask(newTask));
         setActiveTaskId(newTask.id);
     };
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const isPast = new Date(date) < currentDate; // Дні в минулому
+    const isToday = new Date(date).toDateString() === currentDate.toDateString(); // Поточний день
 
     return (
-        <DayContainer $isCurrentMonth={isCurrentMonth}>
-            <DayHeader monthName={monthName} dayNumber={dayNumber} taskCount={tasks.length} />
+        <DayContainer $isCurrentMonth={isCurrentMonth} $isToday={isToday} $isPast={isPast}>
+            <DayHeader monthName={monthName} dayNumber={dayNumber} taskCount={tasks.length}/>
             {holidays.map((holiday, index) => (
                 <div key={index} className="holiday">
                     {holiday.name}
@@ -82,9 +85,12 @@ const Day: React.FC<DayProps> = ({ date, dayNumber, isCurrentMonth, monthName })
                 />
             )}
             <ButtonContainer>
-                <AddTaskButton onClick={handleCreateTask}>
-                    <FaPlus />
-                </AddTaskButton>
+                {!isPast && (
+                    <AddTaskButton onClick={handleCreateTask}>
+                        <FaPlus/>
+                    </AddTaskButton>)
+                }
+
             </ButtonContainer>
         </DayContainer>
     );

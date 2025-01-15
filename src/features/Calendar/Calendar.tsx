@@ -33,10 +33,19 @@ const Calendar: React.FC = () => {
         const activeTaskId = active.data.current?.taskId; // Отримуємо ID завдання
         const activeTaskDay = active.data.current?.day;   // Отримуємо день завдання
 
-        const overDay = over.data.current?.date; // Отримуємо день, куди скидаємо
+        const overDay = over?.data?.current?.date || allTasks.find(task => task.id === over.id)?.day; // Отримуємо день, куди скидаємо
         const overTaskId = over.data.current?.taskId; // Отримуємо ID завдання, над яким скидаємо
 
         if (!activeTaskId || !activeTaskDay || !overDay) return;
+        const today = new Date().toISOString().split('T')[0];
+        console.log('today', today)
+        console.log('overDay', overDay)
+        console.log('activeTaskDay', activeTaskDay)
+
+        if (new Date(overDay) < new Date(today)) {
+            alert("Перетягування на минулі дні заборонено.");
+            return;
+        }
 
         if (activeTaskDay === overDay) {
             // Перетягування в межах одного дня
@@ -58,7 +67,10 @@ const Calendar: React.FC = () => {
             }
         } else {
             // Перетягування між різними днями
-            dispatch(editTask({ id: activeTaskId, day: overDay }));
+            if (overDay && activeTaskDay && activeTaskDay !== overDay) {
+                dispatch(editTask({ id: activeTaskId, day: overDay }));
+            }
+
         }
     };
 

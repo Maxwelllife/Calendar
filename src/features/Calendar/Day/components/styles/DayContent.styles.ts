@@ -5,8 +5,6 @@ export const ContentContainer = styled.div`
     border-radius: 5px;
     box-shadow: 4px 4px 4px #dddddd;
     padding: 5px;
-    position: relative;
-    z-index: 1;
 `;
 
 export const TaskStripesContainer = styled.div`

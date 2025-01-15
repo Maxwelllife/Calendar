@@ -5,6 +5,7 @@ import { Task } from "../../../TaskManagement/taskSlice";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import DroppableWrapper from "./DroppableWrapper";
 import {ContentContainer, TaskStripesContainer} from "./styles/DayContent.styles";
+import { CSSProperties } from "react";
 
 
 interface DayContentProps {
@@ -33,8 +34,8 @@ const DayContent: React.FC<DayContentProps> = ({
     });
 
     return (
-        <ContentContainer ref={setDayNodeRef}>
-            <TaskStripesContainer>
+        <ContentContainer >
+            <TaskStripesContainer ref={setDayNodeRef}>
                 {tasks.map((task) => (
                     <DroppableWrapper
                         key={task.id}
@@ -47,10 +48,7 @@ const DayContent: React.FC<DayContentProps> = ({
                         <TaskDraggable
                             task={task}
                             isActive={task.id === activeTask?.id}
-                            setActiveTask={(id) => {
-                                console.log("Setting active task ID:", id);
-                                setActiveTask(id);
-                            }}
+                            setActiveTask={(id) => {setActiveTask(id);}}
                         />
                     </DroppableWrapper>
                 ))}
@@ -74,13 +72,13 @@ interface TaskDraggableProps {
 
 const TaskDraggable: React.FC<TaskDraggableProps> = ({ task, isActive, setActiveTask }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: task.id, // Унікальний id для кожної задачі
+        id: task.id, // Унікальний id для кожної таски
         data: {
-            taskId: task.id, // Передаємо ID завдання
-            day: task.day, // Передаємо день завдання
+            taskId: task.id, // Передаємо ID таски
+            day: task.day, // Передаємо день таски
         },
     });
-    const style = {
+    const style: CSSProperties = {
         transform: `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0)`,
     };
     return (

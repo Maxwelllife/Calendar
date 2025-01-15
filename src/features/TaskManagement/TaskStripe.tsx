@@ -9,10 +9,7 @@ interface TaskStripeProps {
 
 const TaskStripe: React.FC<TaskStripeProps> = ({ isActive, priority, onPointerUp }) => {
     return(
-        <Stripe $isActive={isActive} $priority={priority}  onPointerUp={() => {
-            console.log('Stripe clicked'); // Додайте цей лог
-            onPointerUp();
-        }}/>
+        <Stripe $isActive={isActive} $priority={priority}  onPointerUp={onPointerUp}/>
     );
 }
 

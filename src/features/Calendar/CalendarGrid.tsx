@@ -15,7 +15,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, allTasks }) =>
     return (
         <GridContainer>
             {days.map(({ date, dayNumber, isFirstDay, isLastDay, isCurrentMonth, monthName}) => {
-                const tasksForDay = allTasks.filter((task) => task.day === date);
                 return (
                     <Day
                         key={date}

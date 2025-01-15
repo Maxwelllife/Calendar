@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { media, theme } from '../../../../app/styles/theme';
 
-export const DayContainer = styled.div<{ $isCurrentMonth: boolean }>`
+export const DayContainer = styled.div<{ $isCurrentMonth: boolean, $isToday: boolean; $isPast: boolean }>`
     position: relative;
     border-radius: 5px;
     padding: 5px;
     background-color: ${(props) =>
-            props.$isCurrentMonth ? '#e3e5e6' : '#ebebeb'};
+            props.$isCurrentMonth ? props.$isToday ? '#F1D290FF': '#e3e5e6' : '#ebebeb'};
     color: ${(props) => (props.$isCurrentMonth ? '#4c4e50' : '#969a9b')};
     display: flex;
     height: 150px;
