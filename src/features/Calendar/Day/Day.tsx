@@ -47,7 +47,7 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
         setActiveTaskId(id);
     }, []);
 
-    const {deleteTaskById, editTaskById} = useTaskActions(tasks, setActiveTaskId);
+    const { addNewTask, editTaskById, deleteTaskById } = useTaskActions(tasks, setActiveTaskId);
 
     const activeTask = tasks.find((task) => task.id === activeTaskId);
 
@@ -57,9 +57,10 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
             day: formattedDate,
             text: "Click to edit",
             order: tasks.length + 1,
+            priority: undefined, // Якщо не обов'язково, можна пропустити
         };
-        dispatch(addTask(newTask));
-        setActiveTaskId(newTask.id);
+        addNewTask(newTask);
+        // setActiveTaskId(newTask.id);
     };
     today.setHours(0, 0, 0, 0);
     const isPast = new Date(date) < today; // Дні в минулому

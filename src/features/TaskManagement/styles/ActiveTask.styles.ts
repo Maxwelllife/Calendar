@@ -20,6 +20,9 @@ export const ActiveTaskContainer = styled.div`
         outline: none;
         resize: none;
     }
+    .task-text {
+        width: 100%;
+    }
 
     .delete {
         padding: 0;

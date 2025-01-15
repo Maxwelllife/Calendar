@@ -36,7 +36,7 @@ const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask})
     return (
         <ActiveTaskContainer>
             {isEditing ? (
-                <div className={'edit_text_wrapper'}>
+                <div className="edit_text_wrapper">
                     <textarea
                         value={editedText}
                         onChange={(e) => setEditedText(e.target.value)}

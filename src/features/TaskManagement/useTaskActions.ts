@@ -5,14 +5,8 @@ import {v4 as uuidv4} from 'uuid';
 export const useTaskActions = (tasks: Task[], setActiveTaskId: (id: string | null) => void) => {
     const dispatch = useAppDispatch();
 
-    const addNewTask = (day: string) => {
-        const newTask = {
-            id: uuidv4(),
-            day,
-            text: "Click to edit",
-            order: tasks.length + 1,
-        };
 
+    const addNewTask = (newTask: Task) => {
         dispatch(addTask(newTask));
         setActiveTaskId(newTask.id); // Робимо нову таску активною
     };
