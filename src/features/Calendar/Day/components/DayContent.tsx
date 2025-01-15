@@ -1,11 +1,10 @@
 import React from "react";
-import TaskStripe from "../../../TaskManagement/TaskStripe";
 import ActiveTask from "../../../TaskManagement/ActiveTask";
 import { Task } from "../../../TaskManagement/taskSlice";
-import {useDraggable, useDroppable} from "@dnd-kit/core";
+import {useDroppable} from "@dnd-kit/core";
 import DroppableWrapper from "./DroppableWrapper";
 import {ContentContainer, TaskStripesContainer} from "./styles/DayContent.styles";
-import { CSSProperties } from "react";
+import TaskDraggable from "./TaskDraggable";
 
 
 interface DayContentProps {
@@ -15,6 +14,7 @@ interface DayContentProps {
     deleteTaskById: (id: string) => void;
     editTaskById: (id: string, text?: string, priority?: "high" | "medium" | "low") => void;
     date: string; // Дата дня, використовується як id для droppable
+    isPast: boolean;
 }
 
 const DayContent: React.FC<DayContentProps> = ({
@@ -24,6 +24,7 @@ const DayContent: React.FC<DayContentProps> = ({
                                                    deleteTaskById,
                                                    editTaskById,
                                                    date,
+                                                   isPast,
                                                }) => {
     // Droppable для дня
     const { setNodeRef: setDayNodeRef } = useDroppable({
@@ -33,23 +34,37 @@ const DayContent: React.FC<DayContentProps> = ({
         },
     });
 
+    const isEmptyTaskList = tasks.length === 0
+
     return (
-        <ContentContainer >
-            <TaskStripesContainer ref={setDayNodeRef}>
-                {tasks.map((task) => (
+        <ContentContainer $isEmptyTaskList={isEmptyTaskList}>
+            <TaskStripesContainer ref={setDayNodeRef} $isEmptyTaskList={isEmptyTaskList}>
+                {tasks.length > 0 ? (
+                    tasks.map((task) => (
+                        <DroppableWrapper
+                            key={task.id}
+                            id={task.id}
+                            data={{
+                                date: task.day,
+                                taskId: task.id,
+                            }}
+                        >
+                            <TaskDraggable
+                                task={task}
+                                isActive={task.id === activeTask?.id}
+                                setActiveTask={setActiveTask}
+                            />
+                        </DroppableWrapper>
+                    ))
+                ) : (  !isPast && (
                     <DroppableWrapper
-                        key={task.id}
-                        id={task.id} // ID завдання
+                        id={`${date}-empty`}
                         data={{
-                            date: task.day, // День завдання
-                            taskId: task.id, // ID завдання
+                            date: date,
+                            taskId: null,
                         }}
                     >
-                        <TaskDraggable
-                            task={task}
-                            isActive={task.id === activeTask?.id}
-                            setActiveTask={(id) => {setActiveTask(id);}}
-                        />
+                        <div >Drop here</div>
                     </DroppableWrapper>
                 ))}
             </TaskStripesContainer>
@@ -61,39 +76,6 @@ const DayContent: React.FC<DayContentProps> = ({
                 />
             )}
         </ContentContainer>
-    );
-};
-
-interface TaskDraggableProps {
-    task: Task;
-    isActive: boolean;
-    setActiveTask: (id: string) => void;
-}
-
-const TaskDraggable: React.FC<TaskDraggableProps> = ({ task, isActive, setActiveTask }) => {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: task.id, // Унікальний id для кожної таски
-        data: {
-            taskId: task.id, // Передаємо ID таски
-            day: task.day, // Передаємо день таски
-        },
-    });
-    const style: CSSProperties = {
-        transform: `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0)`,
-    };
-    return (
-        <div
-            ref={setNodeRef}
-            style={style}
-            {...listeners}
-            {...attributes}
-        >
-            <TaskStripe
-                isActive={isActive}
-                priority={task.priority}
-                onPointerUp={() => setActiveTask(task.id)}
-            />
-        </div>
     );
 };
 

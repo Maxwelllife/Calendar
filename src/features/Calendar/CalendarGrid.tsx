@@ -2,14 +2,13 @@ import React from 'react';
 import Day from './Day/Day';
 import { generateCalendarDays } from './utils';
 import GridContainer from "./styles/GridContainer.styles";
-import {Task} from "../TaskManagement/taskSlice";
 
 interface CalendarGridProps {
     currentDate: Date;
-    allTasks: Task[];
+    today: Date; // фіксована дата
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, allTasks }) => {
+const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, today}) => {
     const days = generateCalendarDays(currentDate);
 
     return (
@@ -24,6 +23,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, allTasks }) =>
                         isLastDay={isLastDay}
                         isCurrentMonth={isCurrentMonth}
                         monthName={monthName}
+                        today={today}
                     />
                 )
             })}

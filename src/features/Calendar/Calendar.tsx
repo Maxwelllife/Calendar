@@ -16,7 +16,7 @@ const Calendar: React.FC = () => {
     // Отримуємо назву місяця і року
     const currentMonthName = currentDate.toLocaleString('en-US', {month: 'long'});
     const currentYear = currentDate.getFullYear();
-
+    const today = new Date();
     // Перемикання місяців
     const handlePreviousMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -33,16 +33,16 @@ const Calendar: React.FC = () => {
         const activeTaskId = active.data.current?.taskId; // Отримуємо ID завдання
         const activeTaskDay = active.data.current?.day;   // Отримуємо день завдання
 
-        const overDay = over?.data?.current?.date || allTasks.find(task => task.id === over.id)?.day; // Отримуємо день, куди скидаємо
+        const overDay = over.data.current?.date || over.id; // Дата, куди скидаємо
         const overTaskId = over.data.current?.taskId; // Отримуємо ID завдання, над яким скидаємо
 
         if (!activeTaskId || !activeTaskDay || !overDay) return;
-        const today = new Date().toISOString().split('T')[0];
-        console.log('today', today)
-        console.log('overDay', overDay)
-        console.log('activeTaskDay', activeTaskDay)
+        // const today = new Date().toISOString().split('T')[0];
+        // console.log('today', today)
+        // console.log('overDay', overDay)
+        // console.log('activeTaskDay', activeTaskDay)
 
-        if (new Date(overDay) < new Date(today)) {
+        if (new Date(overDay) < today) {
             alert("Перетягування на минулі дні заборонено.");
             return;
         }
@@ -75,9 +75,6 @@ const Calendar: React.FC = () => {
     };
 
 
-
-
-
     return (
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <Header>
@@ -90,7 +87,7 @@ const Calendar: React.FC = () => {
                     <span key={day}>{day}</span>
                 ))}
             </WeekDays>
-            <CalendarGrid currentDate={currentDate} allTasks={allTasks}/>
+            <CalendarGrid currentDate={currentDate} today={today}/>
         </DndContext>
     );
 };
