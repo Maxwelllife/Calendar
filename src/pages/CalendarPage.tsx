@@ -1,25 +1,24 @@
-import React, { useEffect } from 'react';
-import { useAppDispatch } from '../shared/hooks/reduxHooks';
-import { fetchHolidaysAsync } from '../features/Calendar/asyncActions';
-import TaskFilter from '../features/TaskManagement/TaskFilter';
+import React, {useEffect} from 'react';
+import {useAppDispatch, useAppSelector} from '../shared/hooks/reduxHooks';
 import Calendar from "../features/Calendar/Calendar";
 import {PageContainer} from "./styles/CalendarPage.styles";
-
+import {fetchHolidays} from "../features/Calendar/calendarSlice";
+import Header from "../features/Header/Header";
 
 
 const CalendarPage: React.FC = () => {
     const dispatch = useAppDispatch();
-    const currentYear = new Date().getFullYear();
+    const {selectedCountry, year} = useAppSelector((state) => state.calendar);
 
     useEffect(() => {
-        dispatch(fetchHolidaysAsync(currentYear));
-    }, [dispatch, currentYear]);
+        dispatch(fetchHolidays({countryCode: selectedCountry, year}));
+    }, [dispatch, selectedCountry, year]);
+
 
     return (
         <PageContainer>
-            <h1>Task Calendar</h1>
-            <TaskFilter />
-            <Calendar></Calendar>
+            <Header/>
+            <Calendar/> {/* Передаємо свята до Calendar */}
         </PageContainer>
     );
 };

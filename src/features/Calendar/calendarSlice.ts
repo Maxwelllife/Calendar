@@ -1,58 +1,85 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {fetchHolidaysAsync} from "./asyncActions";
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
+import {Country, Holiday, getCountries, getHolidaysByCountry} from "../../shared/api/calendarAPI";
 
-interface Holiday {
-    name: string;
-    date: string;
-}
+
 
 interface CalendarState {
-    holidays: Record<string, Holiday[]>; // Ключ - дата у форматі 'YYYY-MM-DD', значення - масив свят
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    holidays: Record<string, Holiday[]>; // Наприклад, { "US": [ {name: "...", date: "..."} ] }
+    countryCode: string;
+    year: number;
+    selectedCountry: string;
+    countries: Country[];
+    loading: boolean;
+    error: string | null;
 }
 
 const initialState: CalendarState = {
     holidays: {},
-    status: 'idle',
+    countryCode: 'US',
+    year: new Date().getFullYear(),
+    selectedCountry: 'UA',
+    countries: [],
+    loading: false,
+    error: null,
 };
 
+interface FetchHolidaysArg {
+    countryCode: string;
+    year: number;
+}
+
+export const fetchCountries = createAsyncThunk('calendar/fetchCountries', async () => {
+    return await getCountries();
+});
+
+export const fetchHolidays = createAsyncThunk<
+        Holiday[], // Тип повернутого значення
+        FetchHolidaysArg // Тип аргументів
+    >(
+    'calendar/fetchHolidays',
+    async ({countryCode, year}: { countryCode: string; year: number }) => {
+        return await getHolidaysByCountry(countryCode, year);
+    }
+);
 
 const calendarSlice = createSlice({
     name: 'calendar',
     initialState,
-    reducers: {},
+    reducers: {
+        setSelectedCountry: (state, action: PayloadAction<string>) => {
+            state.selectedCountry = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchHolidaysAsync.pending, (state) => {
-                state.status = 'loading';
+            .addCase(fetchCountries.pending, (state) => {
+                state.loading = true;
+                state.error = null;
             })
-            .addCase(fetchHolidaysAsync.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-
-                // Створюємо новий об'єкт для holidays
-                const updatedHolidays = {...state.holidays};
-
-                action.payload.forEach((holiday: Holiday) => {
-                    const formattedDate = holiday.date;
-
-                    // Ініціалізуємо новий масив для дати
-                    if (!updatedHolidays[formattedDate]) {
-                        updatedHolidays[formattedDate] = [];
-                    }
-
-                    // Додаємо свято, якщо його ще немає
-                    if (!updatedHolidays[formattedDate].some((existingHoliday) => existingHoliday.name === holiday.name)) {
-                        updatedHolidays[formattedDate] = [...updatedHolidays[formattedDate], holiday];
-                    }
-                });
-
-                // Заміна старого об'єкта на новий
-                state.holidays = updatedHolidays;
+            .addCase(fetchCountries.fulfilled, (state, action) => {
+                state.loading = false;
+                state.countries = action.payload;
             })
+            .addCase(fetchCountries.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to fetch countries';
+            })
+            .addCase(fetchHolidays.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchHolidays.fulfilled, (state, action) => {
+                state.loading = false;
 
-            .addCase(fetchHolidaysAsync.rejected, (state) => {
-                state.status = 'failed';
+                const { countryCode } = action.meta.arg;
+                state.holidays[countryCode] = action.payload; // Використовуємо action.payload для отримання свят
+            })
+            .addCase(fetchHolidays.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to fetch holidays';
             });
     },
 });
+
+export const {setSelectedCountry} = calendarSlice.actions;
 export default calendarSlice.reducer;

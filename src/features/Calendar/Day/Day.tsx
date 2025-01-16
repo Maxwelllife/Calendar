@@ -22,11 +22,11 @@ interface DayProps {
 
 
 const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, today}) => {
-    const formattedDate = new Date(date).toISOString().split("T")[0];
 
     const selectHolidaysByDate = React.useMemo(makeSelectHolidaysByDate, []);
-    const holidays = useAppSelector((state) => selectHolidaysByDate(state, formattedDate));
+    const formattedDate = new Date(date).toISOString().split("T")[0];
 
+    const holidays = useAppSelector((state) => selectHolidaysByDate(state, formattedDate));
     const allFilteredTasks = useAppSelector(selectFilteredTasks); // Отримуємо фільтровані по пошуку таски
     // Фільтруємо таски для конкретного дня
     const tasks = allFilteredTasks.filter((task) => task.day === date);
