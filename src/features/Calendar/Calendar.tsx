@@ -11,14 +11,13 @@ import { toast } from "react-toastify";
 const Calendar: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const dispatch = useAppDispatch();
-    const allTasks = useAppSelector((state) => state.tasks.tasks); // Отримуємо всі задачі з Redux
+    const allTasks = useAppSelector((state) => state.tasks.tasks);
 
 
-    // Отримуємо назву місяця і року
     const currentMonthName = currentDate.toLocaleString('en-US', {month: 'long'});
     const currentYear = currentDate.getFullYear();
     const today = new Date();
-    // Перемикання місяців
+
     const handlePreviousMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
     };
@@ -31,11 +30,11 @@ const Calendar: React.FC = () => {
 
         if (!over) return; // Якщо елемент не скинуто в жодну область
 
-        const activeTaskId = active.data.current?.taskId; // Отримуємо ID завдання
-        const activeTaskDay = active.data.current?.day;   // Отримуємо день завдання
+        const activeTaskId = active.data.current?.taskId;
+        const activeTaskDay = active.data.current?.day;
 
-        const overDay = over.data.current?.date || over.id; // Дата, куди скидаємо
-        const overTaskId = over.data.current?.taskId; // Отримуємо ID завдання, над яким скидаємо
+        const overDay = over.data.current?.date || over.id;
+        const overTaskId = over.data.current?.taskId;
 
         if (!activeTaskId || !activeTaskDay || !overDay) return;
 
@@ -43,9 +42,9 @@ const Calendar: React.FC = () => {
             toast.error("Перетягування на минулі дні заборонено.")
             return;
         }
-
+        // Перетягування в межах одного дня
         if (activeTaskDay === overDay) {
-            // Перетягування в межах одного дня
+
             const tasksForDay = allTasks.filter((task) => task.day === activeTaskDay);
 
             const oldIndex = tasksForDay.findIndex((task) => task.id === activeTaskId);

@@ -13,7 +13,7 @@ interface DayContentProps {
     setActiveTask: (id: string) => void;
     deleteTaskById: (id: string) => void;
     editTaskById: (id: string, text?: string, priority?: "high" | "medium" | "low") => void;
-    date: string; // Дата дня, використовується як id для droppable
+    date: string;
     isPast: boolean;
 }
 
@@ -28,9 +28,9 @@ const DayContent: React.FC<DayContentProps> = ({
                                                }) => {
     // Droppable для дня
     const { setNodeRef: setDayNodeRef } = useDroppable({
-        id: date, // ID дня
+        id: date,
         data: {
-            date, // Передаємо інформацію про день
+            date,
         },
     });
 

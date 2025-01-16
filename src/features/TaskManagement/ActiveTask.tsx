@@ -7,7 +7,7 @@ import {toast} from "react-toastify";
 
 
 interface ActiveTaskProps {
-    task: Pick<Task, "id" | "text" | "priority">; // Вибираємо тільки потрібні поля
+    task: Pick<Task, "id" | "text" | "priority">; // Pick вибираємо тільки потрібні поля
     onDeleteTask: (id: string) => void;
     onEditTask: (id: string, text?: string, priority?: "high" | "medium" | "low") => void;
 }
@@ -15,9 +15,8 @@ interface ActiveTaskProps {
 const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState<string>(task.text || "");
-    const [isPrioritySelectorActive, setPrioritySelectorActive] = useState(false); // Флаг для визначення активності вибору пріоритету
+    const [isPrioritySelectorActive, setPrioritySelectorActive] = useState(false);
 
-    // Оновлюємо текст, коли змінюється активна таска
     useEffect(() => {
         setEditedText(task.text || "");
     }, [task]);
@@ -27,15 +26,15 @@ const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask})
             return;
         }
         if (editedText !== task.text) {
-            onEditTask(task.id, editedText.trim()); // Зберігаємо текст
+            onEditTask(task.id, editedText.trim());
         }
-        setIsEditing(false); // Закриваємо редагування
+        setIsEditing(false);
     };
     const handlePriorityChange = (priority?: "high" | "medium" | "low") => {
-        handleSaveEdit(); // Зберігаємо текст перед вибором кольору
-        onEditTask(task.id, undefined, priority); // Редагуємо тільки пріоритет
-        setPrioritySelectorActive(false); // Скидаємо флаг
-        setIsEditing(false); // Завершуємо редагування після вибору кольору
+        handleSaveEdit();
+        onEditTask(task.id, undefined, priority);
+        setPrioritySelectorActive(false);
+        setIsEditing(false);
     };
 
     return (
@@ -49,15 +48,15 @@ const ActiveTask: React.FC<ActiveTaskProps> = ({task, onDeleteTask, onEditTask})
                             if (!isPrioritySelectorActive) {
                                 handleSaveEdit();
                             }
-                        }} // Закриваємо редагування, якщо вибір кольору неактивний
+                        }}
                         autoFocus
                     />
 
                     <PrioritySelector
                         currentPriority={task.priority}
                         onChange={handlePriorityChange}
-                        onMouseDown={() => setPrioritySelectorActive(true)} // Активуємо вибір пріоритету
-                        onMouseUp={() => setPrioritySelectorActive(false)} // Деактивуємо після завершення вибору
+                        onMouseDown={() => setPrioritySelectorActive(true)}
+                        onMouseUp={() => setPrioritySelectorActive(false)}
                     />
                 </div>
 

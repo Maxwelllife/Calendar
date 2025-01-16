@@ -11,7 +11,7 @@ import {useTaskActions} from "../../TaskManagement/useTaskActions";
 
 
 interface DayProps {
-    date: string; // Формат YYYY-MM-DD
+    date: string;
     dayNumber: number;
     isFirstDay: boolean;
     isLastDay: boolean;
@@ -27,8 +27,8 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
     const formattedDate = new Date(date).toISOString().split("T")[0];
 
     const holidays = useAppSelector((state) => selectHolidaysByDate(state, formattedDate));
-    const allFilteredTasks = useAppSelector(selectFilteredTasks); // Отримуємо фільтровані по пошуку таски
-    // Фільтруємо таски для конкретного дня
+    const allFilteredTasks = useAppSelector(selectFilteredTasks);
+    // Таски для конкретного дня
     const tasks = allFilteredTasks.filter((task) => task.day === date);
 
     const [activeTaskId, setActiveTaskId] = useState<string | null>(
@@ -55,13 +55,13 @@ const Day: React.FC<DayProps> = ({date, dayNumber, isCurrentMonth, monthName, to
             day: formattedDate,
             text: "Click to edit",
             order: tasks.length + 1,
-            priority: undefined, // Якщо не обов'язково, можна пропустити
+            priority: undefined,
         };
         addNewTask(newTask);
     };
     today.setHours(0, 0, 0, 0);
     const isPast = new Date(date) < today; // Дні в минулому
-    const isToday = new Date(date).toDateString() === today.toDateString(); // Саме поточний день для стилів
+    const isToday = new Date(date).toDateString() === today.toDateString();
 
     return (
         <DayContainer $isCurrentMonth={isCurrentMonth} $isToday={isToday} $isPast={isPast}>

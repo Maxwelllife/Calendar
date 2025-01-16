@@ -10,15 +10,15 @@ const priorities = [
 interface PrioritySelectorProps {
     currentPriority?: "high" | "medium" | "low",
     onChange: (priority: "high" | "medium" | "low") => void,
-    onMouseDown: () => void, // Взаємодія почалася
-    onMouseUp: () => void, // Взаємодія завершена
+    onMouseDown: () => void,
+    onMouseUp: () => void,
 }
 
 const PrioritySelector: React.FC<PrioritySelectorProps> = ({currentPriority, onChange, onMouseDown, onMouseUp}) => {
     return (
         <PriorityContainer
-            onMouseDown={onMouseDown} // Запускаємо флаг активності
-            onMouseUp={onMouseUp} // Скидаємо флаг після взаємодії
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
         >
             {priorities.map((priority) => (
                 <PriorityOption

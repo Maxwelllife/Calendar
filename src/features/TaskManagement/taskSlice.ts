@@ -3,14 +3,14 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface Task {
     id: string;
     text?: string;
-    day?: string; // День, до якого прив'язана таска
-    order?: number; // Для сортування задач всередині дня
+    day?: string;
+    order?: number;
     priority?: "high" | "medium" | "low";
 }
 
 interface TaskState {
     tasks: Task[];
-    filter: string; // Поле для текстового фільтру
+    filter: string;
 }
 
 const initialState: TaskState = {
@@ -49,12 +49,11 @@ const taskSlice = createSlice({
             if (taskIndex !== -1) {
                 state.tasks[taskIndex].order = action.payload.order;
             }
-            // Сортуємо список завдань за `order`
             state.tasks.sort((a, b) => (a.order || 0) - (b.order || 0));
 
         },
         filterTasks: (state, action: PayloadAction<string>) => {
-            state.filter = action.payload; // Оновлюємо текстовий фільтр (зберігаємо текст у Redux)
+            state.filter = action.payload;
         },
     },
 });

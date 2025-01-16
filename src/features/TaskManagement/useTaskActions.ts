@@ -7,7 +7,7 @@ export const useTaskActions = ( currentDayTasks?: Task[], setActiveTaskId?: (id:
     const tasks = useAppSelector((state) => state.tasks.tasks);
     const addNewTask = (newTask: Task) => {
         dispatch(addTask(newTask));
-        if (setActiveTaskId) setActiveTaskId(newTask.id); // Робимо нову таску активною
+        if (setActiveTaskId) setActiveTaskId(newTask.id);
     };
 
     const deleteTaskById = (taskId: string) => {
@@ -23,7 +23,7 @@ export const useTaskActions = ( currentDayTasks?: Task[], setActiveTaskId?: (id:
     };
 
     const applyFilter = (searchValue: string) => {
-        dispatch(filterTasks(searchValue)); // Оновлюємо фільтр у Redux
+        dispatch(filterTasks(searchValue));
 
         const hasTasks = tasks.some((task) =>
             task.text?.toLowerCase().includes(searchValue.toLowerCase())

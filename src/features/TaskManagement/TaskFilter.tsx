@@ -8,7 +8,7 @@ const TaskFilter: React.FC = () => {
     const filter = useAppSelector((state) => state.tasks.filter);
     const {applyFilter} = useTaskActions();
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        applyFilter(event.target.value); // Оновлюємо текст фільтра
+        applyFilter(event.target.value);
     };
 
     return (

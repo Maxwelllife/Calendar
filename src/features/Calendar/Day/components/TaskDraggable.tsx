@@ -11,10 +11,10 @@ interface TaskDraggableProps {
 
 const TaskDraggable: React.FC<TaskDraggableProps> = ({ task, isActive, setActiveTask }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: task.id, // Унікальний id для кожної таски
+        id: task.id,
         data: {
-            taskId: task.id, // Передаємо ID таски
-            day: task.day, // Передаємо день таски
+            taskId: task.id,
+            day: task.day,
         },
     });
     const style: CSSProperties = {

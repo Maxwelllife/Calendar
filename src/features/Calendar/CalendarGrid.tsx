@@ -5,7 +5,7 @@ import GridContainer from "./styles/GridContainer.styles";
 
 interface CalendarGridProps {
     currentDate: Date;
-    today: Date; // фіксована дата
+    today: Date;
 }
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, today}) => {

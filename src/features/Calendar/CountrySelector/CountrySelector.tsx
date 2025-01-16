@@ -22,11 +22,11 @@ const CountrySelector: React.FC = () => {
         setIsOpen(false);
     };
     const handleFocus = () => {
-        setIsOpen(true); // Відкриваємо стрілку
+        setIsOpen(true);
     };
 
     const handleBlur = () => {
-        setIsOpen(false); // Закриваємо стрілку
+        setIsOpen(false);
     };
 
     return (
@@ -37,8 +37,8 @@ const CountrySelector: React.FC = () => {
                     <CountrySelect
                         value={selectedCountry}
                         onChange={handleCountryChange}
-                        onFocus={handleFocus} // Використовуємо focus для відкриття
-                        onBlur={handleBlur} // Використовуємо blur для закриття
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                     >
                         {countries.map((country) => (
                             <option key={country.countryCode} value={country.countryCode}>

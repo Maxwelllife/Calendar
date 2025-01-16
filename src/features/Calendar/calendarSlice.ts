@@ -4,7 +4,7 @@ import {Country, Holiday, getCountries, getHolidaysByCountry} from "../../shared
 
 
 interface CalendarState {
-    holidays: Record<string, Holiday[]>; // Наприклад, { "US": [ {name: "...", date: "..."} ] }
+    holidays: Record<string, Holiday[]>;
     countryCode: string;
     year: number;
     selectedCountry: string;
@@ -33,8 +33,8 @@ export const fetchCountries = createAsyncThunk('calendar/fetchCountries', async 
 });
 
 export const fetchHolidays = createAsyncThunk<
-        Holiday[], // Тип повернутого значення
-        FetchHolidaysArg // Тип аргументів
+        Holiday[],
+        FetchHolidaysArg
     >(
     'calendar/fetchHolidays',
     async ({countryCode, year}: { countryCode: string; year: number }) => {
@@ -72,7 +72,7 @@ const calendarSlice = createSlice({
                 state.loading = false;
 
                 const { countryCode } = action.meta.arg;
-                state.holidays[countryCode] = action.payload; // Використовуємо action.payload для отримання свят
+                state.holidays[countryCode] = action.payload;
             })
             .addCase(fetchHolidays.rejected, (state, action) => {
                 state.loading = false;

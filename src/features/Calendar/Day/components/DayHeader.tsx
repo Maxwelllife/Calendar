@@ -1,5 +1,5 @@
 import React from "react";
-import {DayNumber, HeaderContainer, MonthName, TaskCount} from '../styles/Header.styles';
+import {DayNumber, HeaderContainer, MonthName, TaskCount} from './styles/Header.styles';
 
 
 interface DayHeaderProps {
